@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug()<<"1111222";
     this->threadCom.changeTxState(false);
     this->threadCom.TxData.clear();
-    //初始化日志程序
+    //初始化日志程序11111111
     qInstallMessageHandler(outputMessage);
 
     connect(&this->threadNet, SIGNAL(netConnectRecive()), this, SLOT(displayNetConnectReturn()));//显示网络访问结果
