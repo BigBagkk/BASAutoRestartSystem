@@ -58,7 +58,12 @@ void NetThread::net_connect()
         cmd.waitForFinished();
         netConnectReturnStr = QTextCodec::codecForName("gbk")->toUnicode(cmd.readAll());
         bool b = netConnectReturnStr.contains("100% 丢失")||netConnectReturnStr.contains("100% loss");
-
+        /*测试使用HTTP协议访问IP*/
+        //    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
+        //    QNetworkRequest url ;
+        //    url.setUrl(QUrl("http://192.168.0.1"));
+        //    mgr->get(url);
+        //    connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
         if(b){
             qDebug()<< "网络测试：网络不通！！";
             emit(this->netDisconnect());

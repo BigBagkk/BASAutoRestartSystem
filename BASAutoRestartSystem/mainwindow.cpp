@@ -98,7 +98,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    cmd->waitForFinished();
 //    qDebug() << QString(cmd->readAll());
 
-    //测试使用HTTP协议访问IP
+/*测试使用HTTP协议访问IP*/
 //    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
 //    QNetworkRequest url ;
 //    url.setUrl(QUrl("http://192.168.0.1"));
