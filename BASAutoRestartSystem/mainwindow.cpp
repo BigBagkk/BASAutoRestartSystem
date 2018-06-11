@@ -56,9 +56,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setTrayIcon();
     this->ui_init();
     this->recordTime = 0;
-    qDebug()<<"1111222";
+    this->isIconClick = false;
+    //qDebug()<<"1111222";
     this->threadCom.changeTxState(false);
     this->threadCom.TxData.clear();
     //初始化日志程序11111111222223333
@@ -109,6 +111,10 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete TrayIcon;
+    delete TrayIconMenu;
+    delete showMainWindow;
+    delete exit;
     //delete cmd;
 }
 void MainWindow::onToggled(bool bChecked)
@@ -204,6 +210,12 @@ void MainWindow::recoverNetConnectTest()
     //开启网络监测
     threadNet.stopped = false;
 }
+
+void MainWindow::close_windows()
+{
+    isIconClick = true;
+    close();
+}
 /*
  * 接收到串口数据后，触发函数
  */
@@ -289,7 +301,46 @@ void MainWindow::ui_init(void)
         }
     }
 }
+/**********************************************************/
+//创建右下角小图标
+/**********************************************************/
+void MainWindow::setTrayIcon()
+{
+    TrayIcon = new QSystemTrayIcon;
+    TrayIcon->setIcon(QIcon(":/images/1.png"));
 
+    TrayIconMenu = new QMenu(this);
+
+    showMainWindow = new QAction(tr("显示主界面"),this);
+    connect(showMainWindow,SIGNAL(triggered(bool)),this,SLOT(showNormal()));
+    TrayIconMenu->addAction(showMainWindow);
+
+    exit = new QAction(tr("退出程序"),this);
+    connect(exit,SIGNAL(triggered(bool)),this,SLOT(close_windows()));
+    TrayIconMenu->addAction(exit);
+    //connect(TrayIcon,SIGNAL(messageClicked()),this,SLOT(showNormal()));
+
+    //左键触发小图标信号
+    //connect(TrayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(on_iconActivated(QSystemTrayIcon::ActivationReason)));
+
+    TrayIcon->setContextMenu(TrayIconMenu);
+    TrayIcon->show();
+}
+//关闭事件过滤，将所有关闭事件拦截，运行一下语句。
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(this->isIconClick)
+    {
+        event->accept();
+        this->isIconClick = false;
+    }
+    else
+    {
+        event->ignore();
+        showMinimized();
+    }
+
+}
 void MainWindow::on_pushButton_open_com_clicked()
 {
     //已选中串口号
