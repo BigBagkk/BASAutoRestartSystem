@@ -24,8 +24,8 @@ signals:
     void netConnectRecive();
     void netDisconnect();
     void netConnect();
-private:
-    QTimer * testTimer =NULL;
+public:
+    //QTimer * testTimer =NULL;
 private slots:
     void net_connect();
 protected:

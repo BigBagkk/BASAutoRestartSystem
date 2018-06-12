@@ -111,6 +111,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    //delete threadNet.testTimer;
+    threadNet.exit(0);
+    threadCom.exit(0);
     delete TrayIcon;
     delete TrayIconMenu;
     delete showMainWindow;
@@ -331,8 +334,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(this->isIconClick)
     {
-        event->accept();
         this->isIconClick = false;
+        threadCom.exit(0);
+        threadNet.exit(0);
+        qDebug()<<"程序退出";
+        event->accept();
+
     }
     else
     {
@@ -454,13 +461,15 @@ void MainWindow::on_pushButton_testConnect_clicked()
     }
     threadNet.netConnectStr=ui->lineEdit_IP->text();
     threadNet.stopped = false;
-    if(threadNet.isRunning()){
-        threadNet.startTimer();
-    }
-    else
-    {
-        threadNet.start();
-    }
+
+    threadNet.start();
+//    if(threadNet.isRunning()){
+//        threadNet.startTimer();
+//    }
+//    else
+//    {
+//        threadNet.start();
+//    }
 
 //    return;
 //    //测试使用CMD指令ping访问IP

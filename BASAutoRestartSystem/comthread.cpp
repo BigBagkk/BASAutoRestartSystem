@@ -13,6 +13,9 @@ MyThread::MyThread()
 MyThread::~MyThread()
 {
     //delete my_serialport;
+    stop();
+    quit();//优雅地结束线程，必备！！
+    wait();//优雅地结束线程，必备！！
 }
 
 void MyThread::run()
