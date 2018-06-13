@@ -1,2 +1,2 @@
-# BASAutoRestartSystem
-BAS自复位系统
+20180612
+添加托盘功能
