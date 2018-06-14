@@ -25,3 +25,6 @@ HEADERS  += mainwindow.h \
     switchcontrol.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    images.qrc

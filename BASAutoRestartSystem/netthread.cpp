@@ -15,12 +15,12 @@ NetThread::~NetThread()
 //    if(testTimer->isActive()){
 //        testTimer->stop();
 //    }
-    requestInterruption();
-    quit();
-    wait();
-    if(testTimer!=NULL){
-       delete testTimer;
-    }
+    requestInterruption();//结束线程中的循环，推荐用法。
+    quit();//优雅地结束线程，必备！！
+    wait();//优雅地结束线程，必备！！
+//    if(testTimer!=NULL){
+//       delete testTimer;
+//    }
 
     // 请求终止
 
@@ -33,19 +33,20 @@ void NetThread::stopTimer()
 //        qDebug()<<"执行 testTimer->stop();";
 //    }
     //以下语句，停止线程
-    requestInterruption();
-    quit();
-    wait();
-    //delete testTimer;
+    //this->testTimer->stop();
 
+    requestInterruption();//停止线程循环
+    //this->exit(0);
+    this->quit();//关闭线程。等效于this->exit(0);
+    this->wait();//等待线程完全结束。
 }
 
 void NetThread::startTimer()
 {
-    if(!testTimer->isActive()){
-        testTimer->start();
-        qDebug()<<"执行 testTimer->start();";
-    }
+//    if(!testTimer->isActive()){
+//        testTimer->start();
+//        qDebug()<<"执行 testTimer->start();";
+//    }
 }
 
 void NetThread::net_connect()
@@ -58,7 +59,12 @@ void NetThread::net_connect()
         cmd.waitForFinished();
         netConnectReturnStr = QTextCodec::codecForName("gbk")->toUnicode(cmd.readAll());
         bool b = netConnectReturnStr.contains("100% 丢失")||netConnectReturnStr.contains("100% loss");
-
+        /*测试使用HTTP协议访问IP*/
+        //    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
+        //    QNetworkRequest url ;
+        //    url.setUrl(QUrl("http://192.168.0.1"));
+        //    mgr->get(url);
+        //    connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
         if(b){
             qDebug()<< "网络测试：网络不通！！";
             emit(this->netDisconnect());
@@ -92,11 +98,11 @@ void NetThread::run()
 //           emit(this->netConnectRecive());
 //        }
 //    }
-
+    QTimer * testTimer = new QTimer;
     qDebug()<<"进入net线程run";
     while (!isInterruptionRequested())
     {
-        testTimer = new QTimer;
+        //testTimer = new QTimer;
         qDebug()<<"执行net线程run";
         testTimer->setInterval(this->intervalTime*1000);
         QObject::connect(testTimer,SIGNAL(timeout()),this,SLOT(net_connect()),Qt::DirectConnection);
